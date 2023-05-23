@@ -11,18 +11,20 @@ class DQN(object):
         self.max_memory = max_memory
         self.discount = discount
 
+    # BUILDS THE MEMORY IN EXPERIENCE REPLAY
     def remember(self, transition, game_over):
         self.memory.append([transition, game_over])
         if len(self.memory) > self.max_memory:
             del self.memory[0]
     
+    # BUILDS 2 BATCHES OF INPUTS/TARGETS BY EXTRACTING TRANSITIONS
     def get_batch(self, model, batch_size=10):
         len_memory = len(self.memory)
         num_inputs = self.memory[0][0][0].shape[1]
         num_outputs = model.output_shape[-1]
         inputs = np.zeros((min(len_memory, batch_size), num_inputs))
         targets = np.zeros((min(len_memory, batch_size), num_outputs))
-        for i, idx in enumerate(np.random.randint(0, len_memory), size=min(len_memory, batch_size)):
+        for i, idx in enumerate(np.random.randint(0, len_memory, size=min(len_memory, batch_size))):
             current_state, action, reward, next_state = self.memory[idx][0]
             game_over = self.memory[idx][1]
             inputs[i] = current_state
