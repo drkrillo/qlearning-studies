@@ -69,7 +69,7 @@ if env.train:
             next_state, reward, game_over = env.update_env(
                 direction=direction, 
                 energy_ai=energy_ai,
-                month=new_month + int(timestep/(30*24*60)) 
+                month=int(timestep/(30*24*60)),
             )
             total_reward += reward
             dqn.remember(transition=[current_state, action, reward, next_state], game_over=game_over)
